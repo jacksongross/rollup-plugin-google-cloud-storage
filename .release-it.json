@@ -19,6 +19,6 @@
   },
   "hooks": {},
   "npm": {
-    "publish": false
+    "publish": true
   }
 }
