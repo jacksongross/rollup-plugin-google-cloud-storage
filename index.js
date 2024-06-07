@@ -5,13 +5,12 @@ import ora from 'ora';
 import pLimit from 'p-limit';
 import { z } from "zod";
 
-function getFilenamesForDirectory(directory) {
-  return readdir(directory, { recursive: true, withFileTypes: true }).then(
-    (files) =>
-      files
+async function getFilenamesForDirectory(directory) {
+  const files = await readdir(directory, { recursive: true, withFileTypes: true });
+
+  return files
         .filter((dirent) => dirent.isFile())
         .map((file) => `${file.parentPath}/${file.name}`)
-  );
 }
 
 async function uploadToBucketFromDirectory(spinner, options) {
@@ -89,7 +88,7 @@ export default function googleCloudStorageSync(options) {
         spinner.succeed(`${uploaded} files uploaded, ${skipped} skipped`);
       } catch (error) {
         spinner.fail("Something went wrong uploading the files to Google Cloud Storage");
-        console.error(error);
+        throw error;
       }
     },
   };
