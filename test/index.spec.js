@@ -1,63 +1,61 @@
 import fs from "node:fs";
 
 import { Storage } from "@google-cloud/storage";
-import { afterEach, describe, expect, it, vi } from 'vitest'
-import { rollup } from 'rollup';
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { rollup } from "rollup";
 
-import RollupPluginGoogleCloudStorage from '../index';
+import RollupPluginGoogleCloudStorage from "../index";
 
 const mockedBucket = {
-  upload: vi.fn((file, options) => Promise.resolve(file)),
+  upload: vi.fn((file) => Promise.resolve(file)),
 };
 
 const mockedStorage = {
-  bucket: vi.fn(() => mockedBucket)
+  bucket: vi.fn(() => mockedBucket),
 };
 
-vi.mock("ora", () => {
-  return {
-    default: vi.fn(() => ({
-      start: vi.fn().mockReturnThis(),
-      succeed: vi.fn(),
-      fail: vi.fn(),
-    })),
-  };
-});
+vi.mock("ora", () => ({
+  default: vi.fn(() => ({
+    start: vi.fn().mockReturnThis(),
+    succeed: vi.fn(),
+    fail: vi.fn(),
+  })),
+}));
 
-vi.mock('@google-cloud/storage', () => {
-  return {
-    Storage: vi.fn(() => mockedStorage)
-  };
-});
+vi.mock("@google-cloud/storage", () => ({
+  Storage: vi.fn(() => mockedStorage),
+}));
 
 async function buildRollupBundle(options) {
   const bundle = await rollup({
-    input: './test/fixtures/main.js',
+    input: "./test/fixtures/main.js",
     logLevel: "silent",
     plugins: [RollupPluginGoogleCloudStorage(options)],
   });
 
-  return bundle.write({ dir: './dist' });
+  return bundle.write({ dir: "./dist" });
 }
 
-describe('RollupPluginGoogleCloudStorage', () => {
+describe("RollupPluginGoogleCloudStorage", () => {
   afterEach(() => {
-    fs.rmSync('dist', { recursive: true, force: true });
+    fs.rmSync("dist", { recursive: true, force: true });
   });
 
-  describe('writeBundle', () => {
-    describe('when no options are provided', () => {
-      it('throws a validation error', async () => {
-        expect(async () => buildRollupBundle()).rejects.toThrowError(/Required/);
+  describe("writeBundle", () => {
+    describe("when no options are provided", () => {
+      it("throws a validation error", async () => {
+        expect(async () => buildRollupBundle()).rejects.toThrowError(
+          /Required/
+        );
       });
     });
 
     describe("when directory is not found", () => {
-      it('throws an error', async () => {
+      it("throws an error", async () => {
         const options = {
-          bucketName: 'my-bucket',
-          directory: 'does-not-exist',
-          serviceKeyJson: JSON.stringify({ some: 'key' }),
+          bucketName: "my-bucket",
+          directory: "does-not-exist",
+          serviceKeyJson: JSON.stringify({ some: "key" }),
         };
 
         expect(async () => buildRollupBundle(options)).rejects.toThrowError();
@@ -66,16 +64,21 @@ describe('RollupPluginGoogleCloudStorage', () => {
 
     it("uploads files to Google Storage bucket for provided options", async () => {
       const options = {
-        bucketName: 'my-bucket',
-        directory: './test/fixtures',
-        serviceKeyJson: JSON.stringify({ some: 'key' }),
+        bucketName: "my-bucket",
+        directory: "./test/fixtures",
+        serviceKeyJson: JSON.stringify({ some: "key" }),
       };
 
       await buildRollupBundle(options);
 
-      expect(Storage).toHaveBeenCalledWith({ credentials: JSON.parse(options.serviceKeyJson) });
+      expect(Storage).toHaveBeenCalledWith({
+        credentials: JSON.parse(options.serviceKeyJson),
+      });
       expect(mockedStorage.bucket).toHaveBeenCalledWith(options.bucketName);
-      expect(mockedBucket.upload).toHaveBeenCalledWith("./test/fixtures/main.js", expect.any(Object))
+      expect(mockedBucket.upload).toHaveBeenCalledWith(
+        "./test/fixtures/main.js",
+        expect.any(Object)
+      );
     });
   });
 });

@@ -4,9 +4,7 @@
     "commit": true,
     "commitMessage": "Release ${version}",
     "push": true,
-    "pushArgs": [
-      "--follow-tags"
-    ],
+    "pushArgs": ["--follow-tags"],
     "pushRepo": "origin",
     "requireCleanWorkingDir": false,
     "requireCommits": true,

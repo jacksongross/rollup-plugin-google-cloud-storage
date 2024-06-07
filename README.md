@@ -1,4 +1,5 @@
 # rollup-plugin-google-cloud-storage
+
 A plugin to sync built assets to a Google Cloud Storage bucket.
 
 ![Version](https://img.shields.io/npm/v/rollup-plugin-google-cloud-storage) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](#) [![GitHub issues](https://img.shields.io/github/issues/jacksongross/rollup-plugin-google-cloud-storage)](https://github.com/jacksongross/rollup-plugin-google-cloud-storage/issues)
@@ -10,7 +11,9 @@ Install the plugin with npm
 ```bash
 npm install rollup-plugin-google-cloud-storage --save-dev
 ```
+
 ## Basic example
+
 An example rollup.config.js:
 
 ```js
@@ -33,5 +36,3 @@ export default {
   plugins: [GoogleCloudStorage(options)]
 };
 ```
-
-
