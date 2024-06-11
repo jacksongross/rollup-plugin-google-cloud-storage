@@ -32,7 +32,7 @@ async function uploadToBucketFromDirectory(spinner, options) {
 
   function uploadFile(filePath) {
     return storage.bucket(bucketName).upload(filePath, {
-      destination: filePath.replace(directory, ""),
+      destination: filePath.replace(`${directory}/`, ""),
       ...(skipIfExists
         ? {
             preconditionOpts: {

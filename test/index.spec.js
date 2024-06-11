@@ -77,7 +77,12 @@ describe("RollupPluginGoogleCloudStorage", () => {
       expect(mockedStorage.bucket).toHaveBeenCalledWith(options.bucketName);
       expect(mockedBucket.upload).toHaveBeenCalledWith(
         "./test/fixtures/main.js",
-        expect.any(Object)
+        {
+          destination: "main.js",
+          preconditionOpts: {
+            ifGenerationMatch: 0,
+          },
+        }
       );
     });
   });
