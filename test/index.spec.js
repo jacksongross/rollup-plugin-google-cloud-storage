@@ -44,7 +44,7 @@ describe("RollupPluginGoogleCloudStorage", () => {
   describe("writeBundle", () => {
     describe("when no options are provided", () => {
       it("throws a validation error", async () => {
-        expect(async () => buildRollupBundle()).rejects.toThrowError(
+        await expect(async () => buildRollupBundle()).rejects.toThrowError(
           /Required/
         );
       });
@@ -58,7 +58,9 @@ describe("RollupPluginGoogleCloudStorage", () => {
           serviceKeyJson: JSON.stringify({ some: "key" }),
         };
 
-        expect(async () => buildRollupBundle(options)).rejects.toThrowError();
+        await expect(async () =>
+          buildRollupBundle(options)
+        ).rejects.toThrowError();
       });
     });
 
