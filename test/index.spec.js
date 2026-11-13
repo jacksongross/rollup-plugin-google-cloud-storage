@@ -45,7 +45,7 @@ describe("RollupPluginGoogleCloudStorage", () => {
     describe("when no options are provided", () => {
       it("throws a validation error", async () => {
         await expect(async () => buildRollupBundle()).rejects.toThrowError(
-          /Required/
+          /expected object/,
         );
       });
     });
@@ -59,7 +59,7 @@ describe("RollupPluginGoogleCloudStorage", () => {
         };
 
         await expect(async () =>
-          buildRollupBundle(options)
+          buildRollupBundle(options),
         ).rejects.toThrowError();
       });
     });
@@ -84,7 +84,7 @@ describe("RollupPluginGoogleCloudStorage", () => {
           preconditionOpts: {
             ifGenerationMatch: 0,
           },
-        }
+        },
       );
     });
   });
